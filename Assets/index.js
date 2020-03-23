@@ -54,98 +54,77 @@ inquirer.prompt([
         name: "Contributing"
     }
 
-]).then((response) => {
-    // console.log(response.github);
-    // console.log(response.Repo);
-    // console.log(response.Installation);
-    // console.log(response.Usage);
-    // console.log(response.License);
-    // console.log(response.Contributing);
-    // console.log(response.Tests);
+]).then(function({ github, Repo, Description, License, Installation, Tests, Usage, Contributing }) {
+    axios.get(`https://api.github.com/users/${github}`).then(function ({ data }) {
 
-axios.get(`https://api.github.com/users/${response.github}`)
-    .then(data => {
-        // console.log(data);
-        // console.log(data.data.login);
-        // console.log(data.data.avatar_url);
-        // console.log(data.data.email);
+    console.log(data);
 
+        const picture = data.avatar_url;
 
+        const email = data.email;
 
-const layout = `# ${response.Repo}
-[![GitHub license](https://img.shields.io/badge/license-APACHE2.0-blue.svg)](https://github.com/${response.github}/${response.Repo})
+        let layout = `# ${Repo}
+![GitHub](https://img.shields.io/github/license/${github}/${Repo})
 
 ## Description
-
-${response.Description}
-
+        
+--${Description}
+        
 ## Table of Contents
-
+        
 * [Installation](#installation)
-
+        
 * [Usage](#usage)
-
+        
 * [License](#license)
-
+        
 * [Contributing](#contributing)
-
+        
 * [Tests](#tests)
-
+        
 * [Questions](#questions)
-
+        
 ## Installation
+        
+--To install necessary dependencies, run the following command:
+        
+________________        
+${Installation}
+________________
 
-To install necessary dependencies, run the following command:
-
-````
-${response.Installation}
-````
-
+        
 ## Usage
-
-${response.Usage}
-
+        
+--${Usage}
+        
 ## License
-
-This project is licensed under the ${response.License} license.
-
+        
+--This project is licensed under the ${License} license.
+        
 ## Contributing
-
-${response.Contributing}
-
+        
+--${Contributing}
+        
 ## Tests
+        
+--To run tests, run the following command:
+        
+_________        
+${Tests}
+_________       
 
-To run tests, run the following command:
-
-````
-${response.Tests}
-````
 
 ## Questions
+        
+![Avatar](${picture})
+        
+If you have any questions about the repo, open an issue or contact [${github}]
+(https;//api.github.com/users/${github}) directly at ${email}`;
 
-<img
-src="${data.data.avatar_url}" alt="avatar" style="border-radius: 16px" width="30" />
-
-If you have any questions about the repo, open an issue or contact [${response.github}]
-(https;//api.github.com/users/${response.github}) directly at ${data.data.email}`;
-
-
-
-        fs.writeFile("README.md", layout, function(err) {
+        fs.writeFile("README.md", layout, err => {
             if (err) {
-                return console.log(err);
-              }
-            
-              console.log("Success!");
+                throw err
+            }
         })
-    })
-});
-
-
-
-
-function init() {
-
-}
-
-init();
+    });
+})
