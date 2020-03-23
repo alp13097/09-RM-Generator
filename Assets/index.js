@@ -1,4 +1,29 @@
+const fs = require("fs");
+const axios = require("axios");
 const inquirer = require("inquirer");
+
+
+inquirer.prompt([
+    {
+        message: "What is your GitHub username?",
+        type: "input",
+        name: "github"
+    }
+]).then((response) => {
+    console.log(response.github)
+
+axios.get(`https://api.github.com/users/${response.github}`)
+    .then(data => {
+        console.log(data);
+        console.log(data.data.login);
+        console.log(data.data.avatar_url);
+        console.log(data.data.email);
+
+        fs.writeFile("README.md", function(err) {
+
+        })
+    })
+});
 
 
 
@@ -6,7 +31,7 @@ const questions = [
     {
         message: "What is your GitHub username?",
         type: "input",
-        name: "username"
+        name: "github"
     },
     {
         message: "What is your project's name?",
@@ -55,13 +80,10 @@ const questions = [
 
 ];
 
-questions.forEach(question => inquirer.prompt((question[0])
-).then(answers => {
-    console.log(answers)
-}));
-
-
-//moviePatrons.forEach(patron => console.log(patron.age))
+inquirer.prompt([questions[0], questions[1], questions[2], questions[3], questions[4], questions[5], questions[6], questions[7]])
+.then((response) => {
+    console.log(response);
+});
 
 
 function writeToFile(fileName, data) {
